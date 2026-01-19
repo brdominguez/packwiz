@@ -1,4 +1,15 @@
 # packwiz
+
+## Fork Differences
+
+This is a fork of [packwiz/packwiz](https://github.com/packwiz/packwiz) with the following changes:
+
+- **Transitive Modrinth dependencies**: Fixed installation of transitive (nested) dependencies when adding mods from Modrinth. The upstream version incorrectly checked the wrong version object for dependencies.
+- **Side flag for Modrinth install**: Added a `--side` flag to `packwiz mr install` that lets you override the automatic side detection. Use `--side client`, `--side server`, or `--side both` to explicitly set where a mod should run.
+
+---
+
+# packwiz
 packwiz is a command line tool for creating Minecraft modpacks. Instead of managing JAR files directly, packwiz creates TOML metadata files which can be easily version-controlled and shared with git (see an example pack [here](https://github.com/packwiz/packwiz-example-pack)). You can then [export it to a CurseForge or Modrinth modpack](https://packwiz.infra.link/tutorials/hosting/curseforge/), or [use packwiz-installer](https://packwiz.infra.link/tutorials/installing/packwiz-installer/) for an auto-updating MultiMC instance.
 
 packwiz is great for...
