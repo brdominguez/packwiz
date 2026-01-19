@@ -61,6 +61,11 @@ var installCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		if sideFlag != "" && sideFlag != core.UniversalSide && sideFlag != core.ServerSide && sideFlag != core.ClientSide {
+			fmt.Printf("Invalid side %q, must be one of client, server, or both\n", sideFlag)
+			os.Exit(1)
+		}
+
 		var version string
 		var parsedSlug bool
 		if projectID == "" && versionID == "" && len(args) == 1 {
@@ -409,10 +414,15 @@ func createFileMeta(project *modrinthApi.Project, version *modrinthApi.Version, 
 		return err
 	}
 
-	side := getSide(project)
-	if side == "" {
-		fmt.Println("Warning: Project doesn't have a side that's supported; assuming universal. Server: " + *project.ServerSide + " Client: " + *project.ClientSide)
-		side = core.UniversalSide
+	var side string
+	if sideFlag != "" {
+		side = sideFlag
+	} else {
+		side = getSide(project)
+		if side == "" {
+			fmt.Println("Warning: Project doesn't have a side that's supported; assuming universal. Server: " + *project.ServerSide + " Client: " + *project.ClientSide)
+			side = core.UniversalSide
+		}
 	}
 
 	algorithm, hash := getBestHash(file)
@@ -460,6 +470,7 @@ func createFileMeta(project *modrinthApi.Project, version *modrinthApi.Version, 
 var projectIDFlag string
 var versionIDFlag string
 var versionFilenameFlag string
+var sideFlag string
 
 func init() {
 	modrinthCmd.AddCommand(installCmd)
@@ -467,4 +478,5 @@ func init() {
 	installCmd.Flags().StringVar(&projectIDFlag, "project-id", "", "The Modrinth project ID to use")
 	installCmd.Flags().StringVar(&versionIDFlag, "version-id", "", "The Modrinth version ID to use")
 	installCmd.Flags().StringVar(&versionFilenameFlag, "version-filename", "", "The Modrinth version filename to use")
+	installCmd.Flags().StringVar(&sideFlag, "side", "", "The side to install the mod on (client, server, or both)")
 }
